@@ -1,34 +1,40 @@
 import * as React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import Logo from "../components/Logo";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8
-  },
-  title: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  subTitle: {
-    margin: 24,
-    textAlign: "center"
-  }
-});
+import { View } from "react-native";
+import { list } from "../services/youtube.service";
+import { useState } from "react";
+import { iYoutubeListItem } from "../models/youtube-list.model";
+import { YoutubeList } from "../components/youtube-list/youtube-list.component";
+import { Header } from "../components/header/header.component";
+import { styles } from "./home.styles";
 
 const Home = () => {
+  const [youtubeList, setYoutubeList] = useState<iYoutubeListItem[]>([]);
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const onPressSearch = async () => {
+    const response = await list({ query: searchQuery });
+    setYoutubeList(response.items);
+    setNextPageToken(response.nextPageToken || null);
+  };
+
+  const onEndReached = async () => {
+    if (!nextPageToken) {
+      return;
+    }
+    const response = await list({ query: "programming", nextPageToken });
+    setYoutubeList((prev) => [...prev, ...response.items]);
+    setNextPageToken(response.nextPageToken || null);
+  };
+
   return (
-    <View style={styles.container}>
-      <Logo />
-      <Text style={styles.title}>MightyByte React Native Challenge.</Text>
-      <Text style={styles.subTitle}>
-        You are allowed to modify this project structure in any way you wish.
-      </Text>
+    <View style={styles.rootView}>
+      <Header
+        onPressSearch={onPressSearch}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+      <YoutubeList items={youtubeList} onEndReached={onEndReached} />
     </View>
   );
 };

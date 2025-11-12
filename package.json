@@ -5,17 +5,35 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "react": "17.0.*",
     "react-dom": "17.0.*",
     "react-native": "0.68.2",
     "react-native-web": "0.18.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "^4.0.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "7.0.7",
+    "@types/react": "^19.2.3",
+    "@types/react-native": "^0.72.8",
+    "typescript": "^3.2.1"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
